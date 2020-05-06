@@ -7,7 +7,7 @@
 	broken_states = list("light_broken")
 	var/on = TRUE
 	var/state = 0//0 = fine, 1 = flickering, 2 = breaking, 3 = broken
-	var/list/coloredlights = list("g", "r", "y", "b", "p", "w", "s","o","g")
+	var/list/coloredlights = list("GREEN", "RED", "YELLOW", "CYAN", "LAVANDER", "WHITE")
 	var/currentcolor = 1
 	var/can_modify_colour = TRUE
 	tiled_dirt = FALSE
@@ -32,14 +32,15 @@
 		switch(state)
 			if(0)
 				icon_state = "light_on-[coloredlights[currentcolor]]"
-				set_light(1)
+				light_color = "LIGHT_COLOR_[coloredlights[currentcolor]]"
+				set_light(2)
 			if(1)
 				var/num = pick("1","2","3","4")
 				icon_state = "light_on_flicker[num]"
-				set_light(1)
+				set_light(2)
 			if(2)
 				icon_state = "light_on_broken"
-				set_light(1)
+				set_light(2)
 			if(3)
 				icon_state = "light_off"
 				set_light(0)
