@@ -5,10 +5,15 @@
 	icon_state = "light_on"
 	floor_tile = /obj/item/stack/tile/light
 	broken_states = list("light_broken")
+	///if tile is on or off
 	var/on = TRUE
-	var/state = 0//0 = fine, 1 = flickering, 2 = breaking, 3 = broken
-	var/list/coloredlights = list("GREEN", "RED", "YELLOW", "CYAN", "LAVANDER", "WHITE")
+	///0 = fine, 1 = flickering, 2 = breaking, 3 = broken
+	var/state = 0
+	///array of colors
+	var/list/coloredlights = list(LIGHT_COLOR_RED, LIGHT_COLOR_GREEN, LIGHT_COLOR_YELLOW, LIGHT_COLOR_DARK_BLUE, LIGHT_COLOR_LAVENDER, LIGHT_COLOR_SLIME_LAMP, LIGHT_COLOR_LIGHT_CYAN)
+	/// var to cycle colors
 	var/currentcolor = 1
+	///if you can change color by touching it
 	var/can_modify_colour = TRUE
 	tiled_dirt = FALSE
 
@@ -19,11 +24,12 @@
 
 /turf/open/floor/light/Initialize()
 	. = ..()
+	state = 0
 	update_icon()
 
 /turf/open/floor/light/break_tile()
 	..()
-	light_range = 0
+	state = pick(1,2,3)
 	update_light()
 
 /turf/open/floor/light/update_icon()
@@ -31,16 +37,19 @@
 	if(on)
 		switch(state)
 			if(0)
-				icon_state = "light_on-[coloredlights[currentcolor]]"
-				light_color = "LIGHT_COLOR_[coloredlights[currentcolor]]"
-				set_light(2)
+				icon_state = "light_on-[currentcolor]"
+				light_color = coloredlights[currentcolor]
+				set_light(5)
+				light_range = 3
 			if(1)
-				var/num = pick("1","2","3","4")
-				icon_state = "light_on_flicker[num]"
-				set_light(2)
+				icon_state = "light_on_flicker[currentcolor]"
+				light_color = coloredlights[currentcolor]
+				set_light(3)
+				light_range = 2
 			if(2)
 				icon_state = "light_on_broken"
 				set_light(2)
+				light_range = 1
 			if(3)
 				icon_state = "light_off"
 				set_light(0)
@@ -62,7 +71,6 @@
 	if(!on)
 		on = TRUE
 		currentcolor = 1
-		return
 	else
 		currentcolor++
 	if(currentcolor > coloredlights.len)
@@ -87,7 +95,9 @@
 
 //Cycles through all of the colours
 /turf/open/floor/light/colour_cycle
-	coloredlights = list("cycle_all")
+	icon_state = "light_on-cycle_all"
+	light_color = LIGHT_COLOR_SLIME_LAMP
+	light_range = 3
 	can_modify_colour = FALSE
 
 
@@ -97,9 +107,15 @@
 /turf/open/floor/light/colour_cycle/dancefloor_a
 	name = "dancefloor"
 	desc = "Funky floor."
-	coloredlights = list("dancefloor_A")
+	icon_state = "light_on-dancefloor_A"
+	light_color = LIGHT_COLOR_SLIME_LAMP
+	light_range = 3
+	can_modify_colour = FALSE
 
 /turf/open/floor/light/colour_cycle/dancefloor_b
 	name = "dancefloor"
 	desc = "Funky floor."
-	coloredlights = list("dancefloor_B")
+	icon_state = "light_on-dancefloor_B"
+	light_color = LIGHT_COLOR_SLIME_LAMP
+	light_range = 3
+	can_modify_colour = FALSE
